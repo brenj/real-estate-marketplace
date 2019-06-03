@@ -17,7 +17,7 @@ contract Ownable {
     //  2) create an internal constructor that sets the _owner var to the creater of the contract 
     constructor() public {
         _owner = msg.sender;
-        emit OwnershipTransferred(_owner, msg.sender);
+        emit OwnershipTransferred(_owner, address(0));
     }
     //  3) create an 'onlyOwner' modifier that throws if called by any account other than the owner.
     modifier onlyOwner() {
@@ -29,11 +29,14 @@ contract Ownable {
         // TODO add functionality to transfer control of the contract to a newOwner.
         // make sure the new owner is a real address
         require(newOwner != address(0), "Requires address is not empty");
+
+        address previousOwner = _owner;
         _owner = newOwner;
-        emit OwnershipTransferred(_owner, newOwner);
+
+        emit OwnershipTransferred(previousOwner, newOwner);
     }
     //  5) create an event that emits anytime ownerShip is transfered (including in the constructor)
-    event OwnershipTransferred(address owner, address newOwner);
+    event OwnershipTransferred(address previousOwner, address newOwner);
 }
 
 //  TODO's: Create a Pausable contract that inherits from the Ownable contract
@@ -41,16 +44,21 @@ contract Pausable is Ownable {
     //  1) create a private '_paused' variable of type bool
     bool private _paused;
     //  2) create a public setter using the inherited onlyOwner modifier 
-    function setPaused(bool _pause) public onlyOwner {
-        _paused = _pause;
+    function setPaused(bool status) public onlyOwner {
+        _paused = status;
+
+        if (_paused == true)
+            emit Paused(msg.sender);
+        else
+            emit Unpaused(msg.sender);
     }
     //  3) create an internal constructor that sets the _paused variable to false
     constructor() internal {
-        _paused = false;
+        setPaused(false);
     }
     //  4) create 'whenNotPaused' & 'paused' modifier that throws in the appropriate situation
     modifier whenNotPaused() {
-        require(_paused != true, "Requires contract is not paused");
+        require(_paused == false, "Requires contract is not paused");
         _;
     }
     modifier paused() {
