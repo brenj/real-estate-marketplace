@@ -165,19 +165,19 @@ contract ERC721 is Pausable, ERC165 {
 
         // TODO require the msg sender to be the owner of the contract or isApprovedForAll() to be true
         require(
-            msg.sender != getOwner() || isApprovedForAll(getOwner(), msg.sender),
+            msg.sender != getOwner() || isApprovedForAll(_tokenOwner[tokenId], msg.sender),
             "Requires contract owner or is approved for all");
 
         // TODO add 'to' address to token approvals
         _tokenApprovals[tokenId] = to;
 
         // TODO emit Approval Event
-        emit Approval(getOwner(), to, tokenId);
-
+        emit Approval(_tokenOwner[tokenId], to, tokenId);
     }
 
     function getApproved(uint256 tokenId) public view returns (address) {
         // TODO return token approval if it exists
+        require(_exists(tokenId), "Requires token exists");
         return _tokenApprovals[tokenId];
     }
 
@@ -246,16 +246,17 @@ contract ERC721 is Pausable, ERC165 {
 
         // TODO revert if given tokenId already exists or given address is invalid
         require(
-            _tokenOwner[tokenId] == address(0),
+            _exists(tokenId) == false,
             "Requires token doesn't already exist");
-        require(to != address(0), "Requires address is valid");
+        require(to != address(0), "Requires address is not empty");
+        require(Address.isContract(to) == false, "Requires valid address");
   
         // TODO mint tokenId to given address & increase token count of owner
         _tokenOwner[tokenId] = to;
         _ownedTokensCount[to].increment();
 
         // TODO emit Transfer event
-        emit Transfer(msg.sender, to, tokenId);
+        emit Transfer(address(0), to, tokenId);
     }
 
     // @dev Internal function to transfer ownership of a given token ID to another address.
@@ -264,11 +265,10 @@ contract ERC721 is Pausable, ERC165 {
 
         // TODO: require from address is the owner of the given token
         require(
-            from == _tokenOwner[tokenId],
-            "Requires token owner to transfer");
+            from == _tokenOwner[tokenId], "Requires token owner to transfer");
 
         // TODO: require token is being transfered to valid address
-        require(to != address(0), "Requires transfer to address is valid");
+        require(to != address(0), "Requires transfer address is not empty");
         
         // TODO: clear approval
         _clearApproval(tokenId);
@@ -490,7 +490,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     string private _baseTokenURI;
 
     // TODO: create private mapping of tokenId's to token uri's called '_tokenURIs'
-    mapping (uint => string) private _tokenURIs;
+    mapping (uint256 => string) private _tokenURIs;
 
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
     /*
@@ -533,7 +533,7 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
     // TIP #2: you can also use uint2str() to convert a uint to a string
         // see https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol for strConcat()
     // require the token exists before setting
-    function setTokenURI(uint tokenId) internal {
+    function setTokenURI(uint256 tokenId) internal {
         require(_exists(tokenId), "Requires token exists");
         _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
     }
@@ -550,7 +550,7 @@ contract ERC721MintableComplete is ERC721Metadata {
     //      -takes in a 'to' address, tokenId, and tokenURI as parameters
     //      -returns a true boolean upon completion of the function
     //      -calls the superclass mint and setTokenURI functions
-    function mint(address to, uint tokenId) public onlyOwner returns (bool) {
+    function mint(address to, uint256 tokenId) public onlyOwner returns (bool) {
         _mint(to, tokenId);
         setTokenURI(tokenId);
         return true;
