@@ -17,7 +17,7 @@ contract Ownable {
     //  2) create an internal constructor that sets the _owner var to the creater of the contract 
     constructor() public {
         _owner = msg.sender;
-        emit OwnershipTransferred(_owner, address(0));
+        emit OwnershipTransferred(address(0), _owner);
     }
     //  3) create an 'onlyOwner' modifier that throws if called by any account other than the owner.
     modifier onlyOwner() {
@@ -147,7 +147,7 @@ contract ERC721 is Pausable, ERC165 {
     function balanceOf(address owner) public view returns (uint256) {
         // TODO return the token balance of given address
         // TIP: remember the functions to use for Counters. you can refresh yourself with the link above
-        _ownedTokensCount[owner].current();
+        return _ownedTokensCount[owner].current();
     }
 
     function ownerOf(uint256 tokenId) public view returns (address) {
@@ -275,7 +275,7 @@ contract ERC721 is Pausable, ERC165 {
 
         // TODO: update token counts & transfer ownership of the token ID 
         _ownedTokensCount[from].decrement();
-        _ownedTokensCount[to].decrement();
+        _ownedTokensCount[to].increment();
         _tokenOwner[tokenId] = to;
 
         // TODO: emit correct event
@@ -545,6 +545,9 @@ contract ERC721MintableComplete is ERC721Metadata {
     //  1) Pass in appropriate values for the inherited ERC721Metadata contract
     //      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
     string private _baseTokenURI = "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/";
+
+    constructor(string memory name, string memory symbol) ERC721Metadata(name, symbol, _baseTokenURI) public {
+    }
     //  2) create a public mint() that does the following:
     //      -can only be executed by the contract owner
     //      -takes in a 'to' address, tokenId, and tokenURI as parameters
