@@ -42,10 +42,21 @@ Install, Test, & Run
 
 Screenshot
 ----------
+![Real Estate Marketplace Tests](screenshots/tests.png?raw=true)
 
 Code Organization
 -----------------
 ```console
+contracts/
+├── ERC721Mintable.sol
+├── Migrations.sol
+├── Oraclize.sol
+├── SolnSquareVerifier.sol
+└── Verifier.sol
+test
+├── TestERC721Mintable.js
+├── TestSolnSquareVerifier.js
+└── TestVerifier.js
 ```
 
 Grading (by Udacity)
