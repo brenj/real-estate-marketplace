@@ -1,14 +1,14 @@
 {
-  "name": "capstone",
+  "name": "real-estate-marketplace",
   "version": "1.0.0",
-  "description": "",
+  "description": "An Ethereum real estate marketplace for transferring title ownership.",
   "main": "index.js",
   "scripts": {
     "dev": "lite-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "truffle test"
   },
   "keywords": [],
-  "author": "pk <pkrasam@gmail.com> (https://ipfs.infura.io/ipfs/QmSXiR9Khm3yo1J67nUopvVBxFJ8YGN2fUGZ34Etr3m92x/)",
+  "author": "brenj@mailbox.org)",
   "license": "MIT",
   "devDependencies": {
     "lite-server": "2.4.0"
