@@ -64,8 +64,8 @@ Grading (by Udacity)
 
 Criteria              |Highest Grade Possible  |Grade Recieved
 ----------------------|------------------------|--------------------
-Project Deliverables  |Meets Specifications    |
-ERC721                |Meets Specifications    |
-Zokrates              |Meets Specifications    |
-OpenSea Marketplace   |Meets Specifications    |
-Deployment            |Meets Specifications    |
+Project Deliverables  |Meets Specifications    |Meets Specifications 
+ERC721                |Meets Specifications    |Meets Specifications 
+Zokrates              |Meets Specifications    |Meets Specifications 
+OpenSea Marketplace   |Meets Specifications    |Meets Specifications 
+Deployment            |Meets Specifications    |Meets Specifications 
